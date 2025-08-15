@@ -29,7 +29,7 @@ def load_supabase_data():
             return pd.DataFrame()
         
         supabase_client = create_client(supabase_url, supabase_key)
-        response = supabase_client.from_("placements").select("phase, company_name, job_role, gross_salary_btech, ctc_btech, currency, job_requirements, job_info, company_info, additional_details, job_location").execute()
+        response = supabase_client.from_("placements").select("phase, company_name, job_role, job_location, gross_salary_btech, ctc_btech, currency, job_requirements, job_info, company_info, additional_details").execute()
         
         if not response.data:
             st.error("No data found in the 'placements' table.")
