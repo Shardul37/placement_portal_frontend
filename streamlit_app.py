@@ -50,7 +50,7 @@ def get_dynamic_height(text, line_height=22, max_height=640, min_height=100):
     """Calculate height dynamically based on text length, limited to table height."""
     if not text:
         return min_height
-    lines = text.count("\n") + math.ceil(len(text) / 100)  # Approx line breaks
+    lines = text.count("\n") + math.ceil(len(text) / 80)  # Approx line breaks
     height = lines * line_height
     # Ensure the AI chat never exceeds the table height (640px)
     return min(max_height, max(min_height, height))
