@@ -161,7 +161,7 @@ def main():
             st.subheader("AI Assistant 🤖")
             user_query = st.text_area(
                 "Your Question:", 
-                height=100,
+                height=120,
                 placeholder="Ask me anything about the placement data \neg: what is avg salary?"
             )
 
