@@ -137,7 +137,7 @@ def main():
     # Header
     col1, col2 = st.columns([8, 2])
     with col1:
-        st.markdown("## 📊 IIT Bombay Placement Data 2024-25")
+        st.markdown("## 📊 IIT Bombay Placement Data 2024‑25")
     with col2:
         st.markdown('<div class="header-toggle">', unsafe_allow_html=True)
         if st.button("🤖 Toggle AI Assistant"):
