@@ -10,7 +10,7 @@ import math
 load_dotenv(dotenv_path="../.env")
 
 # Configuration - Adjust this value to experiment with AI response height
-AI_RESPONSE_HEIGHT = 540  # Change this value to adjust AI chat window height
+AI_RESPONSE_HEIGHT = 400  # Change this value to adjust AI chat window height
 
 st.set_page_config(
     page_title="PlacementAI Portal",
@@ -117,6 +117,20 @@ def main():
         .header-toggle {
             margin-top: 1.3rem; /* adjust if needed */
         }
+
+        /* NEW: Reorder columns on mobile (AI on top, table below) while keeping desktop order (table left, AI right) */
+        @media (max-width: 767px) {
+            div.stHorizontalBlock.st-emotion-cache-1g9ga1i.eceldm42 {
+                display: flex;
+                flex-direction: column;
+            }
+            div.stHorizontalBlock.st-emotion-cache-1g9ga1i.eceldm42 > div:nth-child(1) {
+                order: 2; /* table goes second on mobile, stacking below AI */
+            }
+            div.stHorizontalBlock.st-emotion-cache-1g9ga1i.eceldm42 > div:nth-child(2) {
+                order: 1; /* AI goes first on mobile, stacking above table */
+            }
+        }
         </style>
     """, unsafe_allow_html=True)
 
@@ -137,6 +151,7 @@ def main():
         return
 
     if st.session_state.show_ai:
+        # CHANGED: Define table column first (large), AI second (small) for desktop order
         table_col, ai_col = st.columns([3, 1], gap="medium")
 
         with table_col:
