@@ -148,7 +148,7 @@ def main():
 
             if st.button("Ask Agent"):
                 if user_query:
-                    backend_url = "http://127.0.0.1:8000/agent/chat"
+                    backend_url = "https://placement-portal-backend-1znu.onrender.com/agent/chat"
                     try:
                         with st.spinner("Thinking..."):
                             response = requests.post(backend_url, json={"query": user_query})
