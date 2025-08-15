@@ -10,7 +10,7 @@ import math
 load_dotenv(dotenv_path="../.env")
 
 # Configuration - Adjust this value to experiment with AI response height
-AI_RESPONSE_HEIGHT = 400  # Change this value to adjust AI chat window height
+AI_RESPONSE_HEIGHT = 510  # Change this value to adjust AI chat window height
 
 st.set_page_config(
     page_title="PlacementAI Portal",
@@ -36,10 +36,8 @@ def load_supabase_data():
             return pd.DataFrame()
             
         df = pd.DataFrame(response.data)
-        # Remove the ID column if it exists
         if 'id' in df.columns:
             df = df.drop('id', axis=1)
-        # Reset index to get clean 0, 1, 2... numbering
         df = df.reset_index(drop=True)
         return df
     except Exception as e:
@@ -50,9 +48,8 @@ def get_dynamic_height(text, line_height=22, max_height=640, min_height=100):
     """Calculate height dynamically based on text length, limited to table height."""
     if not text:
         return min_height
-    lines = text.count("\n") + math.ceil(len(text) / 80)  # Approx line breaks
+    lines = text.count("\n") + math.ceil(len(text) / 80)
     height = lines * line_height
-    # Ensure the AI chat never exceeds the table height (640px)
     return min(max_height, max(min_height, height))
 
 def main():
@@ -61,45 +58,48 @@ def main():
     if "ai_response" not in st.session_state:
         st.session_state.ai_response = ""
 
-    # CSS for dynamic box and reduced padding
+    # Optimized CSS with proper mobile/desktop handling
     st.markdown("""
         <style>
-        /* Reduce default Streamlit padding - Multiple selectors for compatibility */
-        .main .block-container {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
-            max-width: none !important;
+        /* Desktop padding - preserve current UI */
+        @media (min-width: 768px) {
+            .main .block-container,
+            .block-container,
+            [data-testid="stAppViewContainer"] > .main,
+            [data-testid="stAppViewContainer"] {
+                padding: 1.5rem 2rem 2.5rem 2rem !important;
+                max-width: none !important;
+            }
         }
         
-        .block-container {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
-            max-width: none !important;
+        /* Mobile padding - maintain left padding, reduce right for columns */
+        @media (max-width: 767px) {
+            .main .block-container,
+            .block-container,
+            [data-testid="stAppViewContainer"] > .main,
+            [data-testid="stAppViewContainer"] {
+                padding: 1.5rem 0.5rem 2.5rem 2rem !important;
+                max-width: none !important;
+            }
+            
+            /* Ensure columns use full width on mobile */
+            .stColumn {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
         }
         
-        .css-1d391kg {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
-        }
-        
-        .css-18e3th9 {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
-        }
-        
+        /* Legacy CSS class overrides for compatibility */
+        .css-1d391kg,
+        .css-18e3th9,
         .css-1lcbmhc {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
+            padding: inherit !important;
         }
         
-        /* Remove sidebar padding if any */
+        /* Remove sidebar padding */
         section[data-testid="stSidebar"] {
             width: 0 !important;
             min-width: 0 !important;
-        }
-        
-        /* Alternative approach - target by data attributes */
-        [data-testid="stAppViewContainer"] > .main {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
-        }
-        
-        [data-testid="stAppViewContainer"] {
-            padding: 1.5rem 2rem 2.5rem 2rem !important; /* top right bottom left */
         }
         
         .response-box {
@@ -111,24 +111,24 @@ def main():
             color: white;
             margin-top: 0.5rem;
             box-sizing: border-box;
+            max-height: 510px !important;
         }
 
-        /* Header toggle button spacing */
         .header-toggle {
-            margin-top: 1.3rem; /* adjust if needed */
+            margin-top: 1.3rem;
         }
 
-        /* NEW: Reorder columns on mobile (AI on top, table below) while keeping desktop order (table left, AI right) */
+        /* Column reordering: AI on top for mobile, table left/AI right for desktop */
         @media (max-width: 767px) {
             div.stHorizontalBlock.st-emotion-cache-1g9ga1i.eceldm42 {
                 display: flex;
                 flex-direction: column;
             }
             div.stHorizontalBlock.st-emotion-cache-1g9ga1i.eceldm42 > div:nth-child(1) {
-                order: 2; /* table goes second on mobile, stacking below AI */
+                order: 2; /* Table second on mobile */
             }
             div.stHorizontalBlock.st-emotion-cache-1g9ga1i.eceldm42 > div:nth-child(2) {
-                order: 1; /* AI goes first on mobile, stacking above table */
+                order: 1; /* AI first on mobile */
             }
         }
         </style>
@@ -151,7 +151,7 @@ def main():
         return
 
     if st.session_state.show_ai:
-        # CHANGED: Define table column first (large), AI second (small) for desktop order
+        # Table first, AI second for proper desktop layout (table left, AI right)
         table_col, ai_col = st.columns([3, 1], gap="medium")
 
         with table_col:
@@ -161,7 +161,7 @@ def main():
             st.subheader("AI Assistant 🤖")
             user_query = st.text_area(
                 "Your Question:", 
-                height=120,
+                height=100,
                 placeholder="Ask me anything about the placement data \neg: what is avg salary?"
             )
 
@@ -182,7 +182,6 @@ def main():
                     st.warning("Please enter a question.")
 
             if st.session_state.ai_response:
-                # Use configurable height for AI response
                 dynamic_height = get_dynamic_height(st.session_state.ai_response, max_height=AI_RESPONSE_HEIGHT)
                 st.markdown(
                     f"<div class='response-box' style='height:{dynamic_height}px'>{st.session_state.ai_response}</div>",
