@@ -50,7 +50,7 @@ def get_dynamic_height(text, line_height=22, max_height=640, min_height=100):
     """Calculate height dynamically based on text length, limited to table height."""
     if not text:
         return min_height
-    lines = text.count("\n") + math.ceil(len(text) / 80)  # Approx line breaks
+    lines = text.count("\n") + math.ceil(len(text) / 100)  # Approx line breaks
     height = lines * line_height
     # Ensure the AI chat never exceeds the table height (640px)
     return min(max_height, max(min_height, height))
@@ -143,8 +143,12 @@ def main():
             st.dataframe(df, height=640, use_container_width=True, hide_index=False)
 
         with ai_col:
-            st.subheader("AI Assistant")
-            user_query = st.text_area("Your Question:", height=100)
+            st.subheader("AI Assistant 🤖")
+            user_query = st.text_area(
+                "Your Question:", 
+                height=100,
+                placeholder="Ask me anything about the placement data \neg: what is avg salary?"
+            )
 
             if st.button("Ask Agent"):
                 if user_query:
@@ -158,7 +162,7 @@ def main():
                         else:
                             st.error(f"Error from backend: {response.text}")
                     except requests.exceptions.ConnectionError:
-                        st.error("Could not connect to the FastAPI backend.")
+                        st.error("A̶P̶I̶ ̶k̶a̶ ̶b̶i̶l̶l̶ ̶t̶e̶r̶a̶ ̶b̶a̶a̶p̶ ̶b̶h̶a̶r̶e̶g̶a̶?̶  \nOwner may have taken AI service down due to high gpt api usage")
                 else:
                     st.warning("Please enter a question.")
 
