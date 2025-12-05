@@ -166,20 +166,21 @@ def main():
             )
 
             if st.button("Ask Agent"):
-                if user_query:
-                    backend_url = "https://wrongpartplacement-portal-backend-1znu.onrender.com/agent/chat"
-                    try:
-                        with st.spinner("Thinking..."):
-                            response = requests.post(backend_url, json={"query": user_query})
-                        if response.status_code == 200:
-                            result = response.json()
-                            st.session_state.ai_response = result['response']
-                        else:
-                            st.error(f"Error from backend: {response.text}")
-                    except requests.exceptions.ConnectionError:
-                        st.error("A̶P̶I̶ ̶k̶a̶ ̶b̶i̶l̶l̶ ̶t̶e̶r̶a̶ ̶b̶a̶a̶p̶ ̶b̶h̶a̶r̶e̶g̶a̶?̶  \nOwner may have taken AI service down due to high api usage")
-                else:
-                    st.warning("Please enter a question.")
+                st.error("A̶P̶I̶ ̶k̶a̶ ̶b̶i̶l̶l̶ ̶t̶e̶r̶a̶ ̶b̶a̶a̶p̶ ̶b̶h̶a̶r̶e̶g̶a̶?̶  \nOwner may have taken AI service down due to high api usage")
+              # if user_query:
+            #     backend_url = "https://placement-portal-backend-1znu.onrender.com/agent/chat"
+            #     try:
+            #         with st.spinner("Thinking..."):
+            #             response = requests.post(backend_url, json={"query": user_query})
+            #         if response.status_code == 200:
+            #             result = response.json()
+            #             st.session_state.ai_response = result['response']
+            #         else:
+            #             st.error(f"Error from backend: {response.text}")
+            #     except requests.exceptions.ConnectionError:
+            #         st.error("A̶P̶I̶ ̶k̶a̶ ̶b̶i̶l̶l̶ ̶t̶e̶r̶a̶ ̶b̶a̶a̶p̶ ̶b̶h̶a̶r̶e̶g̶a̶?̶  \nOwner may have taken AI service down due to high api usage")
+            # else:
+            #     st.warning("Please enter a question.")
 
             if st.session_state.ai_response:
                 dynamic_height = get_dynamic_height(st.session_state.ai_response, max_height=AI_RESPONSE_HEIGHT)
