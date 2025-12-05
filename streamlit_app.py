@@ -162,7 +162,7 @@ def main():
             user_query = st.text_area(
                 "Your Question:", 
                 height=100,
-                placeholder="Ask me anything about the placement data \neg: what is avg salary?"
+                placeholder="Ask me anything about the placement data \neg: what ML algorithms do companies ask?"
             )
 
             if st.button("Ask Agent"):
